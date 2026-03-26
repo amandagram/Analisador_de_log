@@ -72,7 +72,7 @@ Condições: Execução em máquina local com carga mínima de processos em segu
 ## 4. Resultados Experimentais
 
 |Nº Threads|Processos,Tempo de Execução (s)|
-
+|---|---|
 | 1 processo (serial) | 22.2512 |
 | 2 processos | 11.4699 |
 | 4 processos |  8515 |
