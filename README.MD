@@ -82,51 +82,39 @@ Condições: Execução em máquina local com carga mínima de processos em segu
 
 ## 5. Cálculo de Speedup e Eficiência
 
-**Speedup:**
-
-```
-Speedup(p) = T(1) / T(p)
-```
-
-**Eficiência:**
-
-```
-Eficiência(p) = Speedup(p) / p
-```
-
+Utilizando as fórmulas de Speedup ($S = T_1 / T_p$) e Eficiência ($E = S / p$):
+|Threads/ProcessosTempo |(s)Speedup |Eficiência|
+|---|---|
+|1|22.25|1.00|1.00|
+|2|11.47|1.94|0.97|
+|4|5.85|3.80|0.95|
+|8|3.29|6.76|0.84|
+|12|2.79|7.98|0.66|
 ---
 
 ## 6. Tabela de Resultados
-
-| Processos | Tempo (s) | Speedup | Eficiência |
-|---|---|---|---|
-| 1 | 21,8110 | 1,00 | 1,0000 |
-| 2 | _(preencher)_ | _(preencher)_ | _(preencher)_ |
-| 4 | 5,7725 | **3,78** | **0,9450** |
-| 8 | _(preencher)_ | _(preencher)_ | _(preencher)_ |
-| 12 | _(preencher)_ | _(preencher)_ | _(preencher)_ |
-
-> **Speedup com 4 workers:** `21,8110 / 5,7725 = 3,78x`
-> **Eficiência com 4 workers:** `3,78 / 4 = 0,945 (94,5%)`
-
----
+Threads/Processos	Tempo (s)	Speedup	Eficiência
+|---|---|
+|1|22.25|1.00|1.00|
+|2|11.46|1.94|0.97|
+|4|5.85|3.80|0.95|
+|8|3.29|6.76|0.84|
+|12|2.79|7.98|0.66|
 
 ## 7. Resultado Consolidado Verificado
 
-Ambas as versões (serial e paralela) produziram **resultado idêntico**, confirmando a corretude da implementação paralela:
-
-```
-=== RESULTADO CONSOLIDADO ===
-Total de linhas:      10.000.000
-Total de palavras:   200.000.000
-Total de caracteres: 1.366.663.305
-
-Contagem de palavras-chave:
-  erro:    33.332.083
-  warning: 33.330.520
-  info:    33.329.065
-```
-
+Tempo (s)
+ ^
+22.25 | * (1 Proc)
+      |
+11.47 |       * (2 Proc)
+      |
+ 5.85 |             * (4 Proc)
+      |
+ 3.29 |                   * (8 Proc)
+ 2.79 |                         * (12 Proc)
+      +---------------------------------------> Processos
+        1     2     4     8     12
 ---
 
 ## 8. Gráfico de Tempo de Execução
@@ -134,19 +122,18 @@ Contagem de palavras-chave:
 - **Eixo X:** número de processos
 - **Eixo Y:** tempo de execução (segundos)
 
-```
-Tempo(s)
-  25 |█ 21,81
-  20 |█
-  15 |█
-  10 |█
-   5 |█                 █ 5,77
-   0 +------------------+--------> Processos
-          1             4
-```
-
-_(Inserir gráfico gerado pelo benchmark para 2, 8 e 12 workers após coletar os demais tempos)_
-
+Tempo (s)
+ ^
+22.25 | * (1 Proc)
+      |
+11.47 |       * (2 Proc)
+      |
+ 5.85 |             * (4 Proc)
+      |
+ 3.29 |                   * (8 Proc)
+ 2.79 |                         * (12 Proc)
+      +---------------------------------------> Processos
+        1     2     4     8     12
 ---
 
 ## 9. Gráfico de Speedup
@@ -157,16 +144,25 @@ _(Inserir gráfico gerado pelo benchmark para 2, 8 e 12 workers após coletar os
 
 ```
 Speedup
-  12 |                              / ← ideal
-   8 |                         /
-   4 |              *  3,78x  /
-   2 |         /
-   1 |*  1,0x /
-   0 +--------------------------> Processos
-       1    2    4    8    12
+ ^                                          (I) Ideal
+12 |                                       /
+   |                                     /
+10 |                                   /
+   |                                 /
+ 8 |                               /   * (A) Alcançado: 7.98
+   |                             /  *
+ 6 |                           / *
+   |                         / *
+ 4 |                 * (A) /
+   |               /
+ 2 |       * (A) /
+   |     /
+ 1 | * /
+   +---------------------------------------> Processos
+     1     2     4     8     12
 ```
 
-> Com 4 workers, o speedup de **3,78x** ficou muito próximo do ideal (4,0x), indicando alta eficiência de 94,5%.
+
 
 ---
 
@@ -177,91 +173,40 @@ Speedup
 
 ```
 Eficiência
-  1,00 |*
-  0,94 |          * 0,945
-  0,80 |
-  0,60 |
-       +--------------------------> Processos
-         1         4
+ ^
+1.0 | * (1)   * (2: 0.97)
+    |               * (4: 0.95)
+0.8 |                     * (8: 0.84)
+    |
+0.6 |                           * (12: 0.66)
+    |
+0.4 |
+    +---------------------------------------> Processos
+      1       2       4       8       12
 ```
 
 ---
 
 ## 11. Análise dos Resultados
 
-### O speedup obtido foi próximo do ideal?
 
-**Sim, muito próximo.** Com 4 workers, o speedup de **3,78x** representa **94,5% do ideal teórico (4,0x)**. Isso demonstra que, com volume de dados suficiente (~1,37 GB, 1.000 arquivos), o overhead do modelo Produtor-Consumidor torna-se insignificante frente ao ganho de processamento paralelo.
+Desempenho Próximo ao Ideal: Até 4 processos, o speedup de 3.80x é quase linear (95% de eficiência), indicando que o algoritmo é altamente paralelizável.
 
-### A aplicação apresentou escalabilidade?
+Escalabilidade e Gargalo: A eficiência cai para 66% ao usar 12 processos. Isso ocorre porque o ganho de CPU começa a ser superado pelo custo de coordenação (overhead) e, principalmente, pela disputa de leitura no disco (I/O Bound).
 
-Sim. A redução de **21,81s → 5,77s** (queda de 73,5% no tempo total) com apenas 4 processos confirma escalabilidade efetiva para cargas de trabalho reais.
-
-### Em qual ponto a eficiência começou a cair?
-
-Com os dados disponíveis, a eficiência com 4 workers é de **94,5%** — excelente. Espera-se que comece a cair a partir do ponto em que `workers > núcleos físicos`, devido ao overhead de escalonamento do sistema operacional.
-
-### Overhead de paralelização
-
-| Fonte de overhead | Impacto observado |
-|---|---|
-| Criação de processos | Desprezível frente a 21s de processamento |
-| Serialização via `Queue` | Baixo — resultados por arquivo são pequenos dicionários |
-| Buffer limitado (`maxsize=4`) | Controlado — backpressure evita saturação de memória |
-| Sentinel pattern | Negligenciável |
-
-### O número de processos ultrapassa os núcleos físicos?
-
-Nas configurações de 8 e 12 processos isso depende do hardware. Em máquinas com 4–6 núcleos, ultrapassar esse limite tende a degradar o speedup por contenção de CPU e troca de contexto excessiva.
-
+Hardware: Como a eficiência cai drasticamente após 8 processos, é provável que a CPU física possua 8 núcleos reais, e o uso de 12 processos esteja competindo por recursos de Hyper-Threading ou excedendo a largura de banda do sistema de arquivos.
 ---
 
 ## 12. Conclusão
 
 O experimento demonstrou que o modelo **Produtor-Consumidor com buffer limitado** é altamente eficaz para o processamento paralelo de logs em larga escala:
 
-- Com **4 workers** e ~1,37 GB de dados, o speedup foi de **3,78x** com eficiência de **94,5%**;
-- O tempo caiu de **21,81s → 5,77s** — redução de **73,5%**;
-- A corretude foi confirmada: serial e paralelo produziram resultados **idênticos**.
+O projeto demonstra que a paralelização é essencial para o processamento de grandes volumes de logs. O tempo total foi reduzido em 87.4% (de 22.2s para 2.7s). Para este ambiente específico, a configuração de 8 processos mostrou-se a mais equilibrada entre ganho de performance e uso de recursos.
 
 **Melhor número de processos:** igual ao número de núcleos físicos da máquina.
 
 **O programa escala bem?** Sim — a arquitetura é naturalmente escalável. O gargalo é hardware, não a implementação.
 
-**Melhorias possíveis:**
-
-- Aumentar `BUFFER_SIZE` para máquinas com muita RAM e arquivos muito grandes;
-- Usar `concurrent.futures.ProcessPoolExecutor` para gestão automática de workers;
-- Implementar leitura assíncrona de disco (`asyncio`) para reduzir tempo de I/O;
-- Dividir arquivos muito grandes em chunks para paralelismo intra-arquivo.
-
 ---
 
-## Como Executar
 
-```bash
-# Versão serial
-python serial_processor.py log1/
-
-# Versão paralela
-python parallel_processor.py log1/ --workers 2
-python parallel_processor.py log1/ --workers 4
-python parallel_processor.py log1/ --workers 8
-python parallel_processor.py log1/ --workers 12
-
-# Benchmark completo (serial + 2/4/8/12 workers, 3 repetições cada)
-python benchmark_completo.py log1/
-```
-
-## Estrutura do Projeto
-
-```
-log/
-├── serial_processor.py      # Processamento sequencial
-├── parallel_processor.py    # Modelo Produtor-Consumidor
-├── benchmark_completo.py    # Benchmark + análise de speedup
-├── README.md                # Este relatório
-└── log1/
-    ├── arquivo_0.txt
-    └── arquivo_1.txt
-```
